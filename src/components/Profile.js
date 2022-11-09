@@ -5,7 +5,7 @@ import { Button, Form } from 'antd';
 import Title from './Title';
 import FormComponent from './FormComponent';
 
-export default function Profile() {
+const Profile = ({dispFunction, phNoFunction}) => {
 
   const formRef = useRef()
 
@@ -20,6 +20,14 @@ export default function Profile() {
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   };
+
+  const onChangeDispName = (e) => {
+    dispFunction(e.value)
+  }
+
+  const onChangePhNo = (e) => {
+    phNoFunction(e.value)
+  }
 
   return (
     <>
@@ -38,9 +46,9 @@ export default function Profile() {
 
         <FormComponent label="First Name" name="firstName" />
         <FormComponent label="Last Name" name="lastName" />
-        <FormComponent label="Display Name" name="displayName" />
+        <FormComponent label="Display Name" name="displayName" eventListen={true} onChange={onChangeDispName} />
         <FormComponent label="Email" name="email" />
-        <FormComponent label="Phone Number (work)" name="phoneNo1" />
+        <FormComponent label="Phone Number (work)" name="phoneNo1" eventListen={true} onChange={onChangePhNo} />
         <FormComponent label="Phone Number (work)" name="phoneNo2" required={false} />
         <FormComponent label="Location" name="location" />
 
@@ -55,3 +63,4 @@ export default function Profile() {
   );
 };
 
+export default Profile;

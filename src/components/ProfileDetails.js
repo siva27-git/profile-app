@@ -1,14 +1,8 @@
-import * as React from 'react';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Title from './Title';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-export default function ProfileDetails() {
+const ProfileDetails = (props) => {
+  const { displayName = "", mobileNo } = props
   return (
     <>
       <Box
@@ -23,11 +17,13 @@ export default function ProfileDetails() {
         src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
       />
       <Typography component="p" variant="h4">
-        Adam Levine
+        {displayName}
       </Typography>
       <Typography component="p" variant="h6">
-        adamlevine@kyro.us
+        {mobileNo}
       </Typography>
     </>
   );
-}
+};
+
+export default ProfileDetails;
