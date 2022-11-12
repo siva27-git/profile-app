@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -15,6 +15,7 @@ import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import Button from '@mui/material/Button';
+import axios from "axios";
 
 import { mainListItems, secondaryListItems } from './listItems';
 import Profile from './Profile';
@@ -23,16 +24,32 @@ import ProfileDetails from './ProfileDetails';
 const drawerWidth = 240;
 
 const MainComponent = () => {
+
     const [open, setOpen] = useState(true);
-    const [mobileNo, setMobileNo] = useState("7401619475"); // Need to get default mobileo
-    const [displayName, setDisplayName] = useState("Adam");
+    const [userData, setUserData] = useState({});
+    const [mobileNo, setMobileNo] = useState(); 
+    const [displayName, setDisplayName] = useState();
     const toggleDrawer = () => setOpen(!open)
 
-    const dispFunction = (e) => {
+    useEffect(() => {
+        getUserDetails()
+    }, []);
+
+    const getUserDetails = async () => {
+        return await axios.get("http://localhost:8000/getUser")
+            .then((response) => {
+                setUserData(response.data)
+                setMobileNo(response.data.mobileNo)
+                setDisplayName(response.data.displayName)
+            })
+            .catch((error) => console.log(error))
+    }
+
+    const displayNameFunction = (e) => {
         setDisplayName(e)
     };
 
-    const phNoFunction = (e) => {
+    const mobileNoFunction = (e) => {
         setMobileNo(e)
     };
 
@@ -127,8 +144,11 @@ const MainComponent = () => {
                                         flexDirection: 'column',
                                         height: 500,
                                     }}
-                                >
-                                    <Profile dispFunction={dispFunction} phNoFunction={phNoFunction} />
+                                >  {
+                                        userData && userData.firstName &&
+                                        <Profile displayNameFunction={displayNameFunction} mobileNoFunction={mobileNoFunction} getUserDetails={getUserDetails} userData={userData} />
+                                    }
+
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} md={4} lg={3}>

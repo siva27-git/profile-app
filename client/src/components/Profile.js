@@ -1,20 +1,35 @@
 import { useRef } from "react";
 import 'antd/dist/antd.css';
 import { Button, Form } from 'antd';
+import axios from "axios";
 
 import Title from './Title';
 import FormComponent from './FormComponent';
 
-const Profile = ({dispFunction, phNoFunction}) => {
+const Profile = ({ displayNameFunction, mobileNoFunction, getUserDetails, userData = {} }) => {
 
-  const formRef = useRef()
+  const formRef = useRef();
+  const { firstName = "", lastName = "", displayName = "", email = "", mobileNo = "", location = "" } = userData;
 
-  const onSumbit = () => {
-    console.log(formRef.current.getFieldValue())
+
+  const onSumbit = async () => {
+    var data = JSON.stringify(formRef.current.getFieldValue());
+    var config = {
+      method: 'post',
+      url: 'http://localhost:8000/updateUser',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    let res = await axios(config);
+    window.location.reload(false)
+    console.log(res)
   }
 
   const onReset = () => {
-    console.log(formRef.current.resetFields())
+    getUserDetails()
+    window.location.reload(false)
   }
 
   const tailLayout = {
@@ -22,11 +37,11 @@ const Profile = ({dispFunction, phNoFunction}) => {
   };
 
   const onChangeDispName = (e) => {
-    dispFunction(e.value)
+    displayNameFunction(e.value)
   }
 
   const onChangePhNo = (e) => {
-    phNoFunction(e.value)
+    mobileNoFunction(e.value)
   }
 
   return (
@@ -40,7 +55,7 @@ const Profile = ({dispFunction, phNoFunction}) => {
         name="basic"
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 15 }}
-        initialValues={{}}
+        initialValues={{ firstName, lastName, displayName, email, mobileNo, location }}
         autoComplete="off"
       >
 
@@ -48,15 +63,12 @@ const Profile = ({dispFunction, phNoFunction}) => {
         <FormComponent label="Last Name" name="lastName" />
         <FormComponent label="Display Name" name="displayName" eventListen={true} onChange={onChangeDispName} />
         <FormComponent label="Email" name="email" />
-        <FormComponent label="Phone Number (work)" name="phoneNo1" eventListen={true} onChange={onChangePhNo} />
-        <FormComponent label="Phone Number (work)" name="phoneNo2" required={false} />
+        <FormComponent label="Phone Number (work)" name="mobileNo" eventListen={true} onChange={onChangePhNo} />
         <FormComponent label="Location" name="location" />
 
         <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit" onClick={onSumbit}>Submit</Button>
-          <Button htmlType="button" onClick={onReset}>
-            Reset
-          </Button>
+          <Button htmlType="button" onClick={onReset}>Reset</Button>
         </Form.Item>
       </Form>
     </>

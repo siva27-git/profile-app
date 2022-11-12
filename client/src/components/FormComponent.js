@@ -1,6 +1,6 @@
 import { Form, Input } from 'antd';
 
-const FormComponent = ({ label, name, required = true, eventListen = false, onChange }) => {
+const FormComponent = ({ label, name, required = true, eventListen = false, onChange, }) => {
 
     const onChangeEvent = (event) => {
         onChange({ key: event.target.id, value: event.target.value })
